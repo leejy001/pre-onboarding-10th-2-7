@@ -5,6 +5,8 @@ import { searchApi } from '../api/searchApi';
 import useDebounce from '../hook/useDebounce';
 import useCache from '../hook/useCache';
 
+const DEBOUNCE_SEC = 500;
+
 function SearchForm({
   search,
   setSearch,
@@ -12,7 +14,7 @@ function SearchForm({
   setSearchResult,
   handleKeyDown,
 }: SearchFormType) {
-  const debouncedSearch = useDebounce(search, 500);
+  const debouncedSearch = useDebounce(search, DEBOUNCE_SEC);
   const { addCache, getCache } = useCache();
 
   const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

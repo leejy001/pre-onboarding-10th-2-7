@@ -5,6 +5,8 @@ import MainLabel from './components/MainLabel';
 import SearchForm from './components/SearchForm';
 import SearchList from './components/SearchList';
 
+const INITIAL_FOCUS_INDEX = -1;
+
 function App() {
   const [search, setSearch] = useState<string>('');
   const [indexFocused, setIndexFocused] = useState<number>(-1);
@@ -33,7 +35,7 @@ function App() {
   const handleEscapeKey = () => {
     setSearchResult([]);
     setSearch('');
-    setIndexFocused(-1);
+    setIndexFocused(INITIAL_FOCUS_INDEX);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
