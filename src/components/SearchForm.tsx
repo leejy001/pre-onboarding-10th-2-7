@@ -1,46 +1,21 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { SearchFormType } from '../types/search';
-import { searchApi } from '../api/searchApi';
 import useDebounce from '../hook/useDebounce';
-import useCache from '../hook/useCache';
+import { useSearchState } from '../context/SearchProvider';
 
 const DEBOUNCE_SEC = 500;
 
-function SearchForm({
-  search,
-  setSearch,
-  setIndex,
-  setSearchResult,
-  handleKeyDown,
-}: SearchFormType) {
+function SearchForm({ search, setSearch, handleKeyDown }: SearchFormType) {
   const debouncedSearch = useDebounce(search, DEBOUNCE_SEC);
-  const { addCache, getCache } = useCache();
+  const { getSearchResult } = useSearchState();
 
   const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
-  const handleFetchSearchResult = async () => {
-    if (search.trim() === '') {
-      setSearchResult([]);
-      setIndex(-1);
-      return;
-    }
-    const data = getCache(search);
-    if (data !== null) {
-      setSearchResult(data);
-      setIndex(-1);
-      return;
-    }
-    const { data: result } = await searchApi(debouncedSearch);
-    addCache(search, result.slice(0, 7));
-    setSearchResult(result.slice(0, 7));
-    setIndex(-1);
-  };
-
   useEffect(() => {
-    handleFetchSearchResult();
+    getSearchResult(debouncedSearch);
   }, [debouncedSearch]);
 
   return (

@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createGlobalStyle } from 'styled-components';
+import { SearchProvider } from './context/SearchProvider';
 import App from './App';
+import { SearchApi } from './api/searchApi';
+import { SearchDataCache } from './service/CacheService';
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -55,10 +58,13 @@ table {
 
 `;
 
+const searchApi = new SearchApi();
+const cacheService = new SearchDataCache();
+
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
+  <SearchProvider searchApi={searchApi} cacheService={cacheService}>
     <GlobalStyle />
     <App />
-  </React.StrictMode>
+  </SearchProvider>
 );

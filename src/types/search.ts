@@ -8,8 +8,6 @@ export interface SearchResultTypes {
 export interface SearchFormType {
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
-  setSearchResult: React.Dispatch<React.SetStateAction<SearchResultTypes[]>>;
   handleKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 

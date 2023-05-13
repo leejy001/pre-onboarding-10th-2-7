@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SearchResultTypes } from './types/search';
 import MainLabel from './components/MainLabel';
 import SearchForm from './components/SearchForm';
 import SearchList from './components/SearchList';
+import { useSearchState } from './context/SearchProvider';
 
 const INITIAL_FOCUS_INDEX = -1;
 
 function App() {
   const [search, setSearch] = useState<string>('');
-  const [indexFocused, setIndexFocused] = useState<number>(-1);
-  const [searchResult, setSearchResult] = useState<SearchResultTypes[]>([]);
+  const { searchResult, setSearchResult, indexFocused, setIndexFocused } = useSearchState();
 
   const handleEnterKey = () => {
     if (searchResult.filter((item, idx) => idx === indexFocused)[0])
@@ -63,13 +62,7 @@ function App() {
     <MainOutlet>
       <MainContainer>
         <MainLabel />
-        <SearchForm
-          search={search}
-          setSearch={setSearch}
-          setIndex={setIndexFocused}
-          setSearchResult={setSearchResult}
-          handleKeyDown={handleKeyDown}
-        />
+        <SearchForm search={search} setSearch={setSearch} handleKeyDown={handleKeyDown} />
         <SearchList
           index={indexFocused}
           searchResult={searchResult}
