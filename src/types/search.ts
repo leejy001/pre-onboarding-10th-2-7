@@ -10,11 +10,11 @@ export interface SearchFormType {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   setIndex: React.Dispatch<React.SetStateAction<number>>;
   setSearchResult: React.Dispatch<React.SetStateAction<SearchResultTypes[]>>;
-  handleKeyDown: (event: React.KeyboardEvent) => void;
+  handleKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export interface SearchListType {
   index: number;
   searchResult: SearchResultTypes[];
-  autoRef: React.RefObject<HTMLUListElement>;
+  handleMouseOver: (e: React.MouseEvent<HTMLLIElement>) => void;
 }

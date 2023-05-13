@@ -32,8 +32,8 @@ function SearchForm({
       return;
     }
     const { data: result } = await searchApi(debouncedSearch);
-    addCache(search, result);
-    setSearchResult(result);
+    addCache(search, result.slice(0, 7));
+    setSearchResult(result.slice(0, 7));
     setIndex(-1);
   };
 

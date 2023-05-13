@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 import { SearchListType } from '../types/search';
 
-function SearchList({ index, searchResult, autoRef }: SearchListType) {
+function SearchList({ index, searchResult, handleMouseOver }: SearchListType) {
   return (
-    <List ref={autoRef}>
+    <List>
       <ListLabel>추천 검색어</ListLabel>
       {searchResult.length === 0 ? (
         <div>검색어 없음</div>
       ) : (
-        searchResult.slice(0, 7).map((item, idx) => (
-          <ListItem key={item.id} isCurrent={index === idx}>
+        searchResult.map((item, idx) => (
+          <ListItem
+            key={item.id}
+            data-index={idx}
+            isCurrent={index === idx}
+            onMouseOver={handleMouseOver}
+          >
             <Image src={`${process.env.PUBLIC_URL}/assets/search.svg`} alt="search" />
             <p>{item.name}</p>
           </ListItem>

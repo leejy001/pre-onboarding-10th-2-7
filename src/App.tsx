@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SearchResultTypes } from './types/search';
 import MainLabel from './components/MainLabel';
@@ -6,38 +6,55 @@ import SearchForm from './components/SearchForm';
 import SearchList from './components/SearchList';
 
 function App() {
-  const autoRef = useRef<HTMLUListElement>(null);
   const [search, setSearch] = useState<string>('');
-  const [index, setIndex] = useState<number>(-1);
+  const [indexFocused, setIndexFocused] = useState<number>(-1);
   const [searchResult, setSearchResult] = useState<SearchResultTypes[]>([]);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.nativeEvent.isComposing) {
-      return;
+  const handleEnterKey = () => {
+    if (searchResult.filter((item, idx) => idx === indexFocused)[0])
+      setSearch(searchResult.filter((item, idx) => idx === indexFocused)[0].name);
+  };
+
+  const handleArrowUpKey = () => {
+    if (indexFocused <= 0) {
+      setIndexFocused(searchResult.length - 1);
+    } else {
+      setIndexFocused(prev => prev - 1);
     }
-    if (searchResult.length > 0) {
-      switch (event.key) {
-        case 'Enter':
-          if (searchResult.filter((item, idx) => idx === index)[0])
-            setSearch(searchResult.filter((item, idx) => idx === index)[0].name);
-          break;
-        case 'ArrowDown':
-          setIndex(index + 1);
-          if (autoRef.current?.childElementCount === index + 1) setIndex(0);
-          break;
-        case 'ArrowUp':
-          setIndex(index - 1);
-          if (index <= 0) {
-            setSearchResult([]);
-            setIndex(-1);
-          }
-          break;
-        case 'Escape':
-          setSearchResult([]);
-          setIndex(-1);
-          break;
-      }
+  };
+  const handleArrowDownKey = () => {
+    if (indexFocused === searchResult.length - 1) {
+      setIndexFocused(0);
+    } else {
+      setIndexFocused(prev => prev + 1);
     }
+  };
+
+  const handleEscapeKey = () => {
+    setSearchResult([]);
+    setSearch('');
+    setIndexFocused(-1);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const functionFor: { [key: string]: () => void } = {
+      Enter: handleEnterKey,
+      ArrowUp: handleArrowUpKey,
+      ArrowDown: handleArrowDownKey,
+      Escape: handleEscapeKey,
+    };
+
+    if (event.nativeEvent.isComposing) return;
+    if (searchResult.length === 0 || !Object.keys(functionFor).includes(event.code)) return;
+
+    return functionFor[event.key]();
+  };
+
+  const handleMouseOver = (e: React.MouseEvent<HTMLLIElement>) => {
+    const { index } = e.currentTarget.dataset;
+    if (index === undefined) return;
+    if (+index === indexFocused) return;
+    setIndexFocused(+index);
   };
 
   return (
@@ -47,11 +64,15 @@ function App() {
         <SearchForm
           search={search}
           setSearch={setSearch}
-          setIndex={setIndex}
+          setIndex={setIndexFocused}
           setSearchResult={setSearchResult}
           handleKeyDown={handleKeyDown}
         />
-        <SearchList index={index} searchResult={searchResult} autoRef={autoRef} />
+        <SearchList
+          index={indexFocused}
+          searchResult={searchResult}
+          handleMouseOver={handleMouseOver}
+        />
       </MainContainer>
     </MainOutlet>
   );
