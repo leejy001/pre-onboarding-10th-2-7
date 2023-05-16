@@ -4,8 +4,6 @@ import { SearchContextType, SearchProviderType } from '../types/context';
 
 const SearchContext = createContext<SearchContextType | null>(null);
 
-export const useSearch = () => useContext(SearchContext);
-
 export function SearchProvider({
   children,
   searchApi,
